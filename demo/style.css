@@ -10,3 +10,10 @@ html, body {
 	padding: 0;
 }
 
+.highlight {
+	background: #FFFD63;
+}
+
+td {
+	padding: 0.2rem;
+}

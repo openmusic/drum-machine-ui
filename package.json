@@ -2,7 +2,7 @@
   "name": "openmusic-drum-machine-ui",
   "version": "1.0.0",
   "description": "A Web Component UI for OpenMusic Drum Machine",
-  "main": "DrumMachine.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -23,7 +23,7 @@
   "homepage": "https://github.com/openmusic/drum-machine-ui",
   "devDependencies": {
     "gulp": "^3.8.11",
-    "openmusic-demo-gulp-tasks": "^1.5.0",
+    "openmusic-demo-gulp-tasks": "^1.5.1",
     "openmusic-drum-machine": "git+https://github.com/openmusic/drum-machine.git",
     "openmusic-oscilloscope": "^1.0.0",
     "openmusic-transport": "^1.0.0",

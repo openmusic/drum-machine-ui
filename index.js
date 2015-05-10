@@ -69,8 +69,11 @@
 	// Optional: for components that represent an audio node
 	proto.attachTo = function(audioNode) {
 
+		var that = this;
+
 		audioNode.addEventListener('step', function(e) {
-			// TODO for highlighting
+			var step = e.detail.value;
+			that.highlightStep(step);
 		});
 
 		this.attachedNode = audioNode;
@@ -114,6 +117,24 @@
 		}
 		return table;
 	}
+
+	proto.highlightStep = function(step) {
+		var classToHighlight = 'step' + step;
+		var highlightClass = 'highlight';
+		var existingHighlight = this.querySelectorAll('[class*=' + highlightClass + ']');
+		console.log('existing ' + existingHighlight.length);
+		for(var i = 0; i < existingHighlight.length; i++) {
+			var el = existingHighlight[i];
+			el.classList.remove(highlightClass);
+		}
+
+		var toHighlight = this.querySelectorAll('[class=' + classToHighlight + ']');
+		for(var j = 0; j < toHighlight.length; j++) {
+			var el2 = toHighlight[j];
+			el2.classList.add(highlightClass);
+		}
+	};
+
 
 	//
 
