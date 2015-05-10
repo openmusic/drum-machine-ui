@@ -97,24 +97,20 @@
 
 		this.innerHTML = '';
 
-		var matrix = makeMatrix(numSteps, numTracks);
+		var matrix = this._makeMatrix(numSteps, numTracks);
 		this._matrixTable = matrix.table;
 		this._matrixInputs = matrix.inputs;
 		this.appendChild(matrix.table);
 
-		// TODO: Read pattern values
 		this._readCurrentPattern();
-
-		// TODO: set up listeners on checkboxes to change pattern values
-		// TODO: send new value to drum machine
-		//
-		// if we get a pattern and it is observing value changes and we observe those and call readCurrentPattern? then if we change a value in the pattern when a checkbox is ticked, observers kick in and readCurrentPattern ends being called
 
 	};
 
-	function makeMatrix(numSteps, numTracks) {
+
+	proto._makeMatrix = function(numSteps, numTracks) {
 		var inputs = [];
 		var table = document.createElement('table');
+		var onInput = onPatternCellInput.bind(this);
 		for(var i = 0; i < numTracks; i++) {
 			var row = table.insertRow();
 			var inputRow = [];
@@ -123,13 +119,27 @@
 				cell.classList.add('step' + j);
 				var checkbox = document.createElement('input');
 				checkbox.type = 'checkbox';
+				checkbox.dataset.track = i;
+				checkbox.dataset.step = j;
+				checkbox.addEventListener('change', onInput);
 				cell.appendChild(checkbox);
 				inputRow.push(checkbox);
 			}
 			inputs.push(inputRow);
 		}
 		return { table: table, inputs: inputs };
+	};
+
+
+	function onPatternCellInput(ev) {
+		var target = ev.target;
+		var track = target.dataset.track;
+		var step = target.dataset.step;
+		var trigger = target.checked ? 1 : 0;
+		
+		this._setPatternStep(track, step, trigger);
 	}
+
 
 	proto._highlightStep = function(step) {
 		var classToHighlight = 'step' + step;
@@ -157,13 +167,16 @@
 			for(var j = 0; j < track.length; j++) {
 				var trigger = track[j];
 				var input = trackInputs[j];
-				if(trigger) {
-					input.setAttribute('checked', 'checked');
-				} else {
-					input.removeAttribute('checked');
-				}
+				input.checked = (trigger === 1);
 			}
 		});
+		
+	};
+
+
+	proto._setPatternStep = function(track, step, trigger) {
+		this.attachedNode.setStep(track, step, trigger);
+		this._readCurrentPattern();
 	};
 
 
