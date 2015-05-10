@@ -66,14 +66,13 @@
 	};
 
 
-	// Optional: for components that represent an audio node
 	proto.attachTo = function(audioNode) {
 
 		var that = this;
 
 		audioNode.addEventListener('step', function(e) {
 			var step = e.detail.value;
-			that.highlightStep(step);
+			that._highlightStep(step);
 		});
 
 		this.attachedNode = audioNode;
@@ -99,30 +98,43 @@
 		this.innerHTML = '';
 
 		var matrix = makeMatrix(numSteps, numTracks);
-		this.appendChild(matrix);
+		this._matrixTable = matrix.table;
+		this._matrixInputs = matrix.inputs;
+		this.appendChild(matrix.table);
+
+		// TODO: Read pattern values
+		this._readCurrentPattern();
+
+		// TODO: set up listeners on checkboxes to change pattern values
+		// TODO: send new value to drum machine
+		//
+		// if we get a pattern and it is observing value changes and we observe those and call readCurrentPattern? then if we change a value in the pattern when a checkbox is ticked, observers kick in and readCurrentPattern ends being called
 
 	};
 
 	function makeMatrix(numSteps, numTracks) {
+		var inputs = [];
 		var table = document.createElement('table');
 		for(var i = 0; i < numTracks; i++) {
 			var row = table.insertRow();
+			var inputRow = [];
 			for(var j = 0; j < numSteps; j++) {
 				var cell = row.insertCell();
 				cell.classList.add('step' + j);
 				var checkbox = document.createElement('input');
 				checkbox.type = 'checkbox';
 				cell.appendChild(checkbox);
+				inputRow.push(checkbox);
 			}
+			inputs.push(inputRow);
 		}
-		return table;
+		return { table: table, inputs: inputs };
 	}
 
-	proto.highlightStep = function(step) {
+	proto._highlightStep = function(step) {
 		var classToHighlight = 'step' + step;
 		var highlightClass = 'highlight';
 		var existingHighlight = this.querySelectorAll('[class*=' + highlightClass + ']');
-		console.log('existing ' + existingHighlight.length);
 		for(var i = 0; i < existingHighlight.length; i++) {
 			var el = existingHighlight[i];
 			el.classList.remove(highlightClass);
@@ -133,6 +145,25 @@
 			var el2 = toHighlight[j];
 			el2.classList.add(highlightClass);
 		}
+	};
+
+
+	proto._readCurrentPattern = function() {
+		
+		var inputs = this._matrixInputs;
+		var pattern = this.attachedNode.currentPattern;
+		pattern.forEach(function(track, i) {
+			var trackInputs = inputs[i];
+			for(var j = 0; j < track.length; j++) {
+				var trigger = track[j];
+				var input = trackInputs[j];
+				if(trigger) {
+					input.setAttribute('checked', 'checked');
+				} else {
+					input.removeAttribute('checked');
+				}
+			}
+		});
 	};
 
 

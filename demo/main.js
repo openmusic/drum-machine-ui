@@ -25,6 +25,8 @@ var drumMachineElement = document.querySelector('openmusic-drum-machine-ui');
 
 drumMachineNode.ready().then(function() {
 	drumMachineElement.attachTo(drumMachineNode);
+}).catch(function(horror) {
+	console.error('OMG', horror);
 });
 
 var transport = document.querySelector('openmusic-transport');
