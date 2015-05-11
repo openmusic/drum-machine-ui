@@ -24,7 +24,7 @@
   "devDependencies": {
     "gulp": "^3.8.11",
     "openmusic-demo-gulp-tasks": "^1.5.1",
-    "openmusic-drum-machine": "git+https://github.com/openmusic/drum-machine.git",
+    "openmusic-drum-machine": "^1.0.0",
     "openmusic-oscilloscope": "^1.0.0",
     "openmusic-transport": "^1.0.0",
     "webcomponents-lite": "^0.6.0"
